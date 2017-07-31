@@ -1,17 +1,17 @@
 # bingo-voice-robot
-bingo语音机器人
+bingo语音机器人 灵感来自 [叮当机器人](https://github.com/wzpan/dingdang-robot/)
 
 ## 硬件要求
   - Raspberry Pi 全系列，或其他 Linux 主机；
   - USB 麦克风（建议选购麦克风阵列）；
   - 音箱（不建议蓝牙音箱）；
+
 ## 软件要求
   - java 8 安装命令  sudo apt-get install openjdk-8-dbg
   - maven 随便哪个版本吧，主要是用于打包用的。如果在其它机器上打好包。就不需要
 
 ## 安装
   - 打包命令：  mvn clean -DskipTests package -am -pl robot-runner
-
 
 ## 配置
   - 参见 robot-runner\src\main\resources\profile.yml
