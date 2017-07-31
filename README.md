@@ -1,6 +1,8 @@
 # bingo-voice-robot
 bingo语音机器人 灵感来自 [叮当机器人](https://github.com/wzpan/dingdang-robot/)
 
+QQ群支持： 643267084 有问题可以这里提.
+
 ## 硬件要求
   - Raspberry Pi 全系列，或其他 Linux 主机；
   - USB 麦克风（建议选购麦克风阵列）；
