@@ -14,6 +14,7 @@ bingo语音机器人 灵感来自 [叮当机器人](https://github.com/wzpan/din
   - 打包命令：  mvn clean -DskipTests package -am -pl robot-runner
 
 ## 配置
+  - 参见：[配置wiki](http://git.oschina.net/zlbroot/bingo-voice-robot/wikis/%E9%85%8D%E7%BD%AE)
   - 参见 robot-runner\src\main\resources\profile.yml
   - 主要是写百度语音appKey信息， 图灵机器人。
 
