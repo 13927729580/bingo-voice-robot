@@ -1,6 +1,5 @@
 package com.lambo.robot;
 
-import com.lambo.robot.manager.impl.RobotDriverManager;
 import com.lambo.robot.model.RobotMsg;
 import com.lambo.robot.model.enums.MsgTypeEnum;
 import com.lambo.robot.model.enums.SystemMsgContentEnum;
@@ -20,13 +19,13 @@ public class RobotOperatingSystem implements IRobotOperatingSystem, Runnable {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final RobotSystemContext systemContext;
 
-    public RobotOperatingSystem(RobotConfig robotConfig, RobotDriverManager robotDriverManager) {
-        this.systemContext = new RobotSystemContext(robotConfig, robotDriverManager);
+    public RobotOperatingSystem(RobotConfig robotConfig) {
+        this.systemContext = new RobotSystemContext(robotConfig);
     }
 
     @Override
     public void install(IApp app) {
-        systemContext.getAppManager().install(app);
+        systemContext.getAppManager().install(systemContext, app);
         logger.info("install app success, app = {}", app);
     }
 

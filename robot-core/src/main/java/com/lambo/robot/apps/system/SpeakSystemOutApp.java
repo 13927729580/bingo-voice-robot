@@ -1,7 +1,6 @@
 package com.lambo.robot.apps.system;
 
 import com.lambo.robot.RobotAppContext;
-import com.lambo.robot.drivers.speaks.ISpeak;
 import com.lambo.robot.model.RobotMsg;
 import com.lambo.robot.model.enums.MsgTypeEnum;
 import com.lambo.robot.model.msgs.SpeakMsg;
@@ -14,7 +13,6 @@ public class SpeakSystemOutApp extends BaseDriverApp {
 
     public SpeakSystemOutApp() {
         super(MsgTypeEnum.speak);
-        this.getDrivers().add(ISpeak.class);
     }
 
     @Override

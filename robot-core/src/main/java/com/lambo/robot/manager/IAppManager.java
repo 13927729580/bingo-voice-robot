@@ -10,15 +10,25 @@ import com.lambo.robot.model.enums.MsgTypeEnum;
  * Created by lambo on 2017/7/25.
  */
 public interface IAppManager {
+
     /**
      * 安装应用.
      *
      * @param app
      */
-    void install(IApp app);
+    void install(RobotSystemContext systemContext, IApp app);
 
+    /**
+     * 注册消息监听.
+     * @param app
+     * @param msgTypeArgs
+     */
     void regListener(IApp app, MsgTypeEnum... msgTypeArgs);
 
+    /**
+     * 移除监听.
+     * @param app
+     */
     void removeListener(IApp app);
 
     /**
@@ -31,5 +41,8 @@ public interface IAppManager {
      */
     boolean msgHandle(RobotSystemContext systemContext, RobotMsg<?> robotMsg) throws Exception;
 
+    /**
+     * 关闭.
+     */
     void halt();
 }

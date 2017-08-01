@@ -12,7 +12,6 @@ import com.lambo.robot.drivers.speaks.impl.BaiDuVoiceSpeakImpl;
 import com.lambo.robot.drivers.wakes.IWakeUp;
 import com.lambo.robot.drivers.wakes.impl.SnowBoyWakeUpImpl;
 import com.lambo.robot.drivers.wakes.impl.SystemReadWakeUpImpl;
-import com.lambo.robot.manager.impl.RobotDriverManager;
 import com.lambo.robot.model.msgs.SpeakMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,8 +46,7 @@ public class RobotRunnable implements Runnable {
 
             ISpeak speak = new BaiDuVoiceSpeakImpl(robotConfig.getVoiceApi());
 
-            RobotDriverManager robotDriverManager = new RobotDriverManager();
-            IRobotOperatingSystem system = new RobotOperatingSystem(robotConfig, robotDriverManager);
+            IRobotOperatingSystem system = new RobotOperatingSystem(robotConfig);
             //使用系统输入作为唤醒的应用.
             system.install(new WakeUpSystemApp(wakeUp));
             system.install(new SpeakSystemApp(speak));

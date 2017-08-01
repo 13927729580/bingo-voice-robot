@@ -42,8 +42,12 @@ public class AppManagerImpl implements IAppManager {
     private final AtomicInteger pidIndex = new AtomicInteger(100);
 
     @Override
-    public void install(IApp app) {
+    public void install(RobotSystemContext systemContext, IApp app) {
         installAppList.add(app);
+        RobotAppContext appContext = new RobotAppContext(systemContext, app, pidIndex.incrementAndGet());
+        app.init(appContext);
+        this.runningAppList.add(appContext);
+        this.runningAppList.sort((o1, o2) -> Integer.valueOf(o1.getRunningLevel()).compareTo(o2.getRunningLevel()));
     }
 
     /**
@@ -74,83 +78,71 @@ public class AppManagerImpl implements IAppManager {
 
     @Override
     public boolean msgHandle(RobotSystemContext systemContext, RobotMsg<?> robotMsg) throws Exception {
-        try {
-            systemContext.getRobotDriverManager().incrementAndGet(robotMsg.getMsgType());
-            if (!robotMsg.isSuccess()) {
-                logger.error("eventHandle failed, robotEvent = {}, robotAppContext = {}", robotMsg);
-                return true;
-            }
-            logger.debug("eventHandle robotEvent = {}", robotMsg);
-
-            installAppList.stream().filter(app -> !isRunningApp(app) && app.canStart(robotMsg)).forEach(app -> runningApp(new RobotAppContext(systemContext, app, pidIndex.incrementAndGet())));
-
-            if (runningAppList.isEmpty()) {
-                logger.debug("eventHandle failed, no running App for this EventType. robotEvent = {}", robotMsg);
-                return false;
-            }
-
-            if (robotMsg.getMsgType() == MsgTypeEnum.interrupt) {
-                InterruptMsg interruptMsg = (InterruptMsg) robotMsg;
-                SystemMsg systemMsg = new SystemMsg(SystemMsgContentEnum.interrupt);
-                for (MsgTypeEnum msgTypeEnum : interruptMsg.getContent()) {
-                    List<IApp> appList = msgListenerRegMap.get(msgTypeEnum);
-                    if (null != appList) {
-                        appList.forEach(app -> app.handleSystemMsg(systemContext, systemMsg));
-                    }
-                }
-                return true;
-            }
-
-            if (robotMsg.getMsgType() == MsgTypeEnum.system) {
-                SystemMsg systemMsg = (SystemMsg) robotMsg;
-                for (IApp iApp : installAppList) {
-                    iApp.handleSystemMsg(systemContext, systemMsg);
-                }
-                return true;
-            }
-            if (MsgTypeEnum.listening == robotMsg.getMsgType()) { //如果是听指令则打断所有录音.
-                runningAppList.forEach(robotAppContext -> {
-                    try {
-                        robotAppContext.getApp().handleSystemMsg(systemContext, new SystemMsg(SystemMsgContentEnum.interrupt));
-                    } catch (Exception e) {
-                        logger.error("listening to interrupt running app failed", e);
-                    }
-                });
-            }
-            List<IApp> appList = msgListenerRegMap.get(robotMsg.getMsgType());
-
-            if (null == appList || appList.isEmpty()) {
-                logger.debug("eventHandle failed, no app for this EventType. robotEvent = {}", robotMsg);
-                return false;
-            }
-
-            RobotAppContext focus = systemContext.focus(robotMsg.getMsgType());
-            if (null != focus && focus.getApp().handle(focus, robotMsg)) {
-                return true;
-            }
-            for (RobotAppContext robotAppContext : runningAppList) {
-                try {
-                    IApp app = robotAppContext.getApp();
-                    logger.debug("process by robotAppContext = {}", robotAppContext);
-                    if (appList.contains(app) && app != focus && app.handle(robotAppContext, robotMsg)) {
-                        logger.debug("eventHandle success, robotEvent = {}, robotAppContext = {}", robotMsg, robotAppContext);
-                        if (MsgTypeEnum.listening == robotMsg.getMsgType()) {
-                            systemContext.addMsg(robotAppContext, new WaitWakeUpMsg());
-                        }
-                        return true;
-                    }
-                } catch (TimeoutException e) {
-                    logger.debug("eventHandle failed, process time out, robotEvent = {}, robotAppContext = {}", robotMsg, robotAppContext);
-                } catch (InterruptedException e) {
-                    logger.debug("eventHandle failed, process interrupted, robotEvent = {}, robotAppContext = {}", robotMsg, robotAppContext);
-                } catch (Exception e) {
-                    logger.error("eventHandle failed, robotEvent = {}, robotAppContext = {}", robotMsg, robotAppContext, e);
-                }
-            }
-
-        } finally {
-            systemContext.getRobotDriverManager().decrementAndGet(robotMsg.getMsgType());
+        if (!robotMsg.isSuccess()) {
+            logger.error("eventHandle failed, robotEvent = {}, robotAppContext = {}", robotMsg);
+            return true;
         }
+        logger.debug("eventHandle robotEvent = {}", robotMsg);
+
+        if (robotMsg.getMsgType() == MsgTypeEnum.interrupt) {
+            InterruptMsg interruptMsg = (InterruptMsg) robotMsg;
+            SystemMsg systemMsg = new SystemMsg(SystemMsgContentEnum.interrupt);
+            for (MsgTypeEnum msgTypeEnum : interruptMsg.getContent()) {
+                List<IApp> appList = msgListenerRegMap.get(msgTypeEnum);
+                if (null != appList) {
+                    appList.forEach(app -> app.handleSystemMsg(systemContext, systemMsg));
+                }
+            }
+            return true;
+        }
+
+        if (robotMsg.getMsgType() == MsgTypeEnum.system) {
+            SystemMsg systemMsg = (SystemMsg) robotMsg;
+            for (IApp iApp : installAppList) {
+                iApp.handleSystemMsg(systemContext, systemMsg);
+            }
+            return true;
+        }
+        if (MsgTypeEnum.listening == robotMsg.getMsgType()) { //如果是听指令则打断所有录音.
+            runningAppList.forEach(robotAppContext -> {
+                try {
+                    robotAppContext.getApp().handleSystemMsg(systemContext, new SystemMsg(SystemMsgContentEnum.interrupt));
+                } catch (Exception e) {
+                    logger.error("listening to interrupt running app failed", e);
+                }
+            });
+        }
+        List<IApp> appList = msgListenerRegMap.get(robotMsg.getMsgType());
+
+        if (null == appList || appList.isEmpty()) {
+            logger.debug("eventHandle failed, no app for this EventType. robotEvent = {}", robotMsg);
+            return false;
+        }
+
+        RobotAppContext focus = systemContext.focus(robotMsg.getMsgType());
+        if (null != focus && focus.getApp().handle(focus, robotMsg)) {
+            return true;
+        }
+        for (RobotAppContext robotAppContext : runningAppList) {
+            try {
+                IApp app = robotAppContext.getApp();
+                logger.debug("process by robotAppContext = {}", robotAppContext);
+                if (appList.contains(app) && app != focus && app.handle(robotAppContext, robotMsg)) {
+                    logger.debug("eventHandle success, robotEvent = {}, robotAppContext = {}", robotMsg, robotAppContext);
+                    if (MsgTypeEnum.listening == robotMsg.getMsgType()) {
+                        systemContext.addMsg(robotAppContext, new WaitWakeUpMsg());
+                    }
+                    return true;
+                }
+            } catch (TimeoutException e) {
+                logger.debug("eventHandle failed, process time out, robotEvent = {}, robotAppContext = {}", robotMsg, robotAppContext);
+            } catch (InterruptedException e) {
+                logger.debug("eventHandle failed, process interrupted, robotEvent = {}, robotAppContext = {}", robotMsg, robotAppContext);
+            } catch (Exception e) {
+                logger.error("eventHandle failed, robotEvent = {}, robotAppContext = {}", robotMsg, robotAppContext, e);
+            }
+        }
+
         logger.debug("eventHandle failed, robotEvent = {}", robotMsg);
         return false;
     }
@@ -158,23 +150,8 @@ public class AppManagerImpl implements IAppManager {
     @Override
     public void halt() {
         for (RobotAppContext appContext : runningAppList) {
+            this.removeListener(appContext.getApp());
             appContext.getApp().exit(0);
         }
-    }
-
-    public void runningApp(RobotAppContext appContext) {
-        appContext.getApp().init(appContext);
-        this.runningAppList.add(appContext);
-        this.runningAppList.sort((o1, o2) -> Integer.valueOf(o1.getRunningLevel()).compareTo(o2.getRunningLevel()));
-        logger.info("runningApp success, appContext = {}", appContext);
-    }
-
-    public boolean isRunningApp(IApp app) {
-        for (RobotAppContext robotAppContext : runningAppList) {
-            if (app == robotAppContext.getApp()) {
-                return true;
-            }
-        }
-        return false;
     }
 }

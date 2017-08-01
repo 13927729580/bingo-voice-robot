@@ -4,7 +4,6 @@ import com.lambo.los.kits.Strings;
 import com.lambo.robot.RobotAppContext;
 import com.lambo.robot.RobotConfig;
 import com.lambo.robot.apis.IVoiceApi;
-import com.lambo.robot.drivers.hears.IHear;
 import com.lambo.robot.kits.AudioPlayer;
 import com.lambo.robot.model.RobotMsg;
 import com.lambo.robot.model.VoiceData;
@@ -28,7 +27,6 @@ public class VoiceDataBaiDuSystemApp extends BaseDriverApp {
     public VoiceDataBaiDuSystemApp(IVoiceApi voiceApi) {
         super(MsgTypeEnum.voiceData);
         this.voiceApi = voiceApi;
-        this.getDrivers().add(IHear.class);
     }
 
     @Override

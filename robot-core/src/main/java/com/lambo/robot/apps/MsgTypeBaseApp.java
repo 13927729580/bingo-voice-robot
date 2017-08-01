@@ -23,11 +23,6 @@ public abstract class MsgTypeBaseApp implements IApp, IInterruptListener {
     }
 
     @Override
-    public boolean canStart(RobotMsg<?> robotMsg) {
-        return Arrays.asList(msgTypeEnums).contains(robotMsg.getMsgType());
-    }
-
-    @Override
     public void exit(int exitCode) {
     }
 

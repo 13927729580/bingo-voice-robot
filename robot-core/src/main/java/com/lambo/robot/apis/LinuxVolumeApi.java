@@ -22,7 +22,7 @@ public class LinuxVolumeApi implements IVolumeApi {
     public int getVolume() {
         int result = -1;
         try {
-            ProcessKit.ProcessStatus processStatus = ProcessKit.execute(1000, "/bin/sh", "-c", "amixer sget PCM ");
+            ProcessKit.ProcessStatus processStatus = ProcessKit.execute(5000, "/bin/sh", "-c", "amixer sget PCM ");
             if (processStatus.exitCode == 0) {
                 Matcher matcher = compile.matcher(processStatus.output);
                 if (matcher.find()) {
@@ -42,7 +42,7 @@ public class LinuxVolumeApi implements IVolumeApi {
             return false;
         }
         try {
-            ProcessKit.ProcessStatus processStatus = ProcessKit.execute(1000, "/bin/sh", "-c", "amixer sset PCM " + volume + "%");
+            ProcessKit.ProcessStatus processStatus = ProcessKit.execute(5000, "/bin/sh", "-c", "amixer sset PCM " + volume + "%");
             if (processStatus.exitCode == 0) {
                 return true;
             }

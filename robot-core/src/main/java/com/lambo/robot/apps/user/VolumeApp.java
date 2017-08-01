@@ -29,7 +29,7 @@ public class VolumeApp extends MsgTypeBaseApp {
     }
 
     @Override
-    public boolean handle(RobotAppContext appContext, RobotMsg<?> msg) throws Exception {
+    public boolean handle(RobotAppContext appContext, RobotMsg<?> msg) {
         if (null == volumeApi) {
             return false;
         }

@@ -23,7 +23,6 @@ public class RecordSystemApp extends BaseDriverApp {
     public RecordSystemApp(IRecord record) {
         super(MsgTypeEnum.listening);
         this.record = record;
-        this.getDrivers().add(IRecord.class);
     }
 
     @Override

@@ -90,10 +90,17 @@ public class MusicNetPlayApp extends MsgTypeBaseApp {
 
         if (content.contains("搜索") && (content.contains("音乐") || content.contains("歌曲"))) {
             appContext.say(new SpeakMsg("请在叮的一声后说出您的关键字."));
-            HearMsg hearEvent = appContext.listening();
-            if (!hearEvent.isSuccess()) {
-                logger.info("search listening failed, hearEvent = {}", hearEvent);
-                appContext.say(new SpeakMsg("没有听清你的关键字，搜索失败！"));
+            HearMsg hearEvent = null;
+            try {
+                hearEvent = appContext.listening();
+                if (!hearEvent.isSuccess()) {
+                    logger.info("search listening failed, hearEvent = {}", hearEvent);
+                    appContext.say(new SpeakMsg("没有听清你的关键字，搜索失败！"));
+                    return true;
+                }
+            } catch (Exception e) {
+                logger.error("listening search key failed, ", e);
+                appContext.addMsg(new SpeakMsg("没有听到内容, 搜索失败"));
                 return true;
             }
             return search(appContext, hearEvent.getContent());

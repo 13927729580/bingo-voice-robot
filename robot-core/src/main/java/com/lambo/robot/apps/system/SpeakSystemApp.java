@@ -17,7 +17,6 @@ public class SpeakSystemApp extends BaseDriverApp {
     public SpeakSystemApp(ISpeak speak) {
         super(MsgTypeEnum.speak);
         this.speak = speak;
-        this.getDrivers().add(ISpeak.class);
     }
 
     @Override

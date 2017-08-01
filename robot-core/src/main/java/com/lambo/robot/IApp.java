@@ -10,15 +10,6 @@ import com.lambo.robot.model.msgs.SystemMsg;
 public interface IApp {
 
     /**
-     * 默认开机就启动程序.
-     * 事件进行打开应用处理.
-     *
-     * @param robotMsg 事件.
-     * @return 是否启动.
-     */
-    boolean canStart(RobotMsg<?> robotMsg);
-
-    /**
      * 退出程序.
      *
      * @param exitCode 退出.

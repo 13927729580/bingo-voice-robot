@@ -26,7 +26,6 @@ public class WakeUpSystemApp extends BaseDriverApp {
     @Override
     public void init(RobotAppContext appContext) {
         super.init(appContext);
-        appContext.regDriver(IWakeUp.class, this);
     }
 
     @Override
@@ -42,17 +41,20 @@ public class WakeUpSystemApp extends BaseDriverApp {
     @Override
     public boolean handle(RobotAppContext appContext, RobotMsg<?> robotMsg) throws Exception {
         if (MsgTypeEnum.waitWakeUp == robotMsg.getMsgType()) {
-            if (appContext.getSystemContext().getRobotDriverManager().get(MsgTypeEnum.waitWakeUp) == 1) {
-                appContext.addMsg(wakeUp.waitWakeUp());
+            if (!appContext.getSystemContext().isWaitWakeUp()) {
+                try{
+                    appContext.getSystemContext().getWaitWakeUpState().incrementAndGet();
+                    appContext.addMsg(wakeUp.waitWakeUp());
+                }finally {
+                    appContext.getSystemContext().getWaitWakeUpState().decrementAndGet();
+                }
             }
             return true;
         }
         if (MsgTypeEnum.wakeUp == robotMsg.getMsgType()) {
             WakeUpMsg wakeUpMsg = (WakeUpMsg) robotMsg;
             appContext.getSystemContext().setWakeUpUid(wakeUpMsg.getUid());
-            if (appContext.getSystemContext().getRobotDriverManager().get(MsgTypeEnum.wakeUp) == 1) {
-                appContext.addMsg(new ListeningMsg());
-            }
+            appContext.addMsg(new ListeningMsg());
             return true;
         }
         return false;

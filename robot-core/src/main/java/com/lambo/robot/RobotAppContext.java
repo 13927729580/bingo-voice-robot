@@ -1,6 +1,5 @@
 package com.lambo.robot;
 
-import com.lambo.robot.drivers.IDriver;
 import com.lambo.robot.model.RobotMsg;
 import com.lambo.robot.model.enums.MsgTypeEnum;
 import com.lambo.robot.model.msgs.HearMsg;
@@ -19,10 +18,12 @@ import java.util.concurrent.TimeoutException;
  */
 public class RobotAppContext {
     private final Logger logger = LoggerFactory.getLogger(getClass());
+
     /**
      * 进行id.
      */
     private final int pid;
+
     /**
      * 当前环境所属app.
      */
@@ -67,16 +68,6 @@ public class RobotAppContext {
 
     public int getPid() {
         return pid;
-    }
-
-    /**
-     * 注册系统app.
-     *
-     * @param driverClazz
-     * @param app
-     */
-    public void regDriver(Class<? extends IDriver> driverClazz, IApp app) {
-        systemContext.getRobotDriverManager().regDriver(driverClazz, app);
     }
 
     public void regListener(MsgTypeEnum[] msgTypeEnums) {
