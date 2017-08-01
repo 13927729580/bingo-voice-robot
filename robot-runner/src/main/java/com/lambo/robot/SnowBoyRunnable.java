@@ -4,6 +4,7 @@ import com.lambo.los.kits.io.IOKit;
 import com.lambo.robot.drivers.wakes.IWakeUp;
 import com.lambo.robot.drivers.wakes.impl.SnowBoyWakeUpImpl;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -16,9 +17,12 @@ public class SnowBoyRunnable implements Runnable {
     @Override
     public void run() {
         try {
-            InputStream inputStream = IOKit.getInputStream("classpath:/profile.yml");
-            IWakeUp wakeUp = new SnowBoyWakeUpImpl(RobotConfig.getRobotConfig(inputStream));
-            IOKit.closeIo(inputStream);
+            String configPath = "profile.yml";
+            if (!new File(configPath).exists()) {
+                configPath = "classpath:/" + configPath;
+            }
+            RobotConfig robotConfig = RobotConfig.getRobotConfig(configPath);
+            IWakeUp wakeUp = new SnowBoyWakeUpImpl(robotConfig);
             while (true) {
                 System.out.println(wakeUp.waitWakeUp());
             }

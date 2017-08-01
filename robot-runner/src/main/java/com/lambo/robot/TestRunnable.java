@@ -6,6 +6,8 @@ import com.lambo.robot.drivers.records.impl.JavaSoundRecordImpl;
 import com.lambo.robot.kits.BeepPlayer;
 import com.lambo.robot.model.VoiceData;
 
+import java.io.File;
+
 /**
  * 热歌.
  * Created by lambo on 2017/7/21.
@@ -15,8 +17,12 @@ public class TestRunnable implements Runnable {
     @Override
     public void run() {
         try {
-            RobotConfig robotConfig = RobotConfig.getRobotConfig("classpath:/profile.yml");
-            System.out.println(new Gson().toJson(robotConfig));
+            String configPath = "profile.yml";
+            if (!new File(configPath).exists()) {
+                configPath = "classpath:/" + configPath;
+            }
+            RobotConfig robotConfig = RobotConfig.getRobotConfig(configPath);
+
             IRecord record = new JavaSoundRecordImpl(robotConfig);
             BeepPlayer beepPlayer = robotConfig.getBeepPlayer();
             while (true) {
