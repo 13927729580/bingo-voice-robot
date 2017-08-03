@@ -54,12 +54,14 @@ public class JavaHttpServer {
 
     /**
      * 设置执行线程池，默认为无线程池.
+     *
      * @param executor
      */
-    public JavaHttpServer setExecutor(Executor executor){
+    public JavaHttpServer setExecutor(Executor executor) {
         httpServer.setExecutor(executor);
         return this;
     }
+
     /**
      * 添加配置 2015年7月26日
      *
@@ -80,7 +82,7 @@ public class JavaHttpServer {
     }
 
     public void start() {
-        if (null == httpServer.getExecutor()){
+        if (null == httpServer.getExecutor()) {
             httpServer.setExecutor(Executors.newCachedThreadPool());
         }
         httpServer.start();

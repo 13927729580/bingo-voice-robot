@@ -1,6 +1,5 @@
 package com.lambo.robot;
 
-import com.google.gson.Gson;
 import com.lambo.robot.drivers.records.IRecord;
 import com.lambo.robot.drivers.records.impl.JavaSoundRecordImpl;
 import com.lambo.robot.kits.BeepPlayer;

@@ -20,6 +20,7 @@ public interface IAppManager {
 
     /**
      * 注册消息监听.
+     *
      * @param app
      * @param msgTypeArgs
      */
@@ -27,6 +28,7 @@ public interface IAppManager {
 
     /**
      * 移除监听.
+     *
      * @param app
      */
     void removeListener(IApp app);

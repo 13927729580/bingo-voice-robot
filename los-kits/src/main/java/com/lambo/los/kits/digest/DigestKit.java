@@ -138,7 +138,7 @@ public class DigestKit {
         return Base64.encode(AES.encrypt(src.getBytes(), key.getBytes(), iv.getBytes()));
     }
 
-    public static String aesDecrypt(String src, String key, String iv) throws Exception{
+    public static String aesDecrypt(String src, String key, String iv) throws Exception {
         return new String(AES.decrypt(Base64.decode(src), key.getBytes(), iv.getBytes()));
     }
 }

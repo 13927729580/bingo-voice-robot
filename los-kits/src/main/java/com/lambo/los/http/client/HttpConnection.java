@@ -537,7 +537,7 @@ public class HttpConnection {
             Response res;
             try {
                 conn.connect();
-                if (req.method() == Method.POST ||req.method() == Method.PUT) {
+                if (req.method() == Method.POST || req.method() == Method.PUT) {
                     if (null != req.postData && req.postData.length > 0) {
                         writePost(req.postData, conn.getOutputStream());
                     } else {
@@ -1098,7 +1098,7 @@ public class HttpConnection {
         /**
          * Pulls a string off the queue (like consumeTo), and then pulls off the
          * matched string (but does not return it).
-         * <p/>
+         * <p>
          * If the queue runs out of characters before finding the seq, will
          * return as much as it can (and queue will go isEmpty() == true).
          *

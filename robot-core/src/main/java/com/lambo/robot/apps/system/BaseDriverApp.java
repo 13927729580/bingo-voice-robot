@@ -2,12 +2,7 @@ package com.lambo.robot.apps.system;
 
 import com.lambo.robot.RobotAppContext;
 import com.lambo.robot.apps.MsgTypeBaseApp;
-import com.lambo.robot.drivers.IDriver;
-import com.lambo.robot.model.RobotMsg;
 import com.lambo.robot.model.enums.MsgTypeEnum;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 系统应用.

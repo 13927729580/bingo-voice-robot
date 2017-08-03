@@ -81,6 +81,7 @@ public class RobotSystemContext {
     }
 
     private final AtomicInteger waitWakeUpState = new AtomicInteger(0);
+
     public boolean isWaitWakeUp() {
         return waitWakeUpState.get() > 0;
     }

@@ -18,7 +18,7 @@ import java.util.Base64;
  * 百度语音合成器.
  * Created by lambo on 2017/7/20.
  */
-public class BaiDuVoiceApi implements IVoiceApi{
+public class BaiDuVoiceApi implements IVoiceApi {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final String URL_TOKEN = "https://openapi.baidu.com/oauth/2.0/token?grant_type=client_credentials&client_id=%s&client_secret=%s&_=%s";
@@ -71,7 +71,7 @@ public class BaiDuVoiceApi implements IVoiceApi{
         }
         int retry = 3;
         while (retry > 0) { //进行重试.
-            retry --;
+            retry--;
             try {
                 HttpConnection httpConnection = HttpConnection.connect(URL_AUDIO_2_TEXT).ignoreContentType(true);
                 httpConnection.method(HttpConnection.Method.POST).timeout(10000);
@@ -90,7 +90,7 @@ public class BaiDuVoiceApi implements IVoiceApi{
                 }
                 logger.error("asr failed, uid = {}, speech.length = {}, body = {}", uid, data.length, body);
                 return null;
-            } catch (SocketTimeoutException ignored){ //网络事件不处理
+            } catch (SocketTimeoutException ignored) { //网络事件不处理
             } catch (IOException e) {
                 logger.error("asr failed, appKey = {}, uid = {}, speech.length = {}", appKey, uid, data.length, e);
                 break;
@@ -113,7 +113,7 @@ public class BaiDuVoiceApi implements IVoiceApi{
         }
         int retry = 3;
         while (retry > 0) {
-            retry --;
+            retry--;
             try {
                 HttpConnection.Response response = HttpConnection.connect(URL_TEXT_2_AUDIO)
                         .data("tex", textContent)
@@ -130,7 +130,7 @@ public class BaiDuVoiceApi implements IVoiceApi{
                 }
                 logger.debug("tts success, textContent = {}", textContent);
                 return response.bodyAsBytes();
-            } catch (SocketTimeoutException ignored){ //网络事件不处理
+            } catch (SocketTimeoutException ignored) { //网络事件不处理
             } catch (IOException e) {
                 logger.error("tts failed, appKey = {}, uid = {}, textContent = {}", appKey, uid, textContent, e);
                 return null;

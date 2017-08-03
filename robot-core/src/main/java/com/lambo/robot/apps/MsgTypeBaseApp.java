@@ -4,12 +4,9 @@ import com.lambo.robot.IApp;
 import com.lambo.robot.IInterruptListener;
 import com.lambo.robot.RobotAppContext;
 import com.lambo.robot.RobotSystemContext;
-import com.lambo.robot.model.RobotMsg;
 import com.lambo.robot.model.enums.MsgTypeEnum;
 import com.lambo.robot.model.enums.SystemMsgContentEnum;
 import com.lambo.robot.model.msgs.SystemMsg;
-
-import java.util.Arrays;
 
 /**
  * 消息类型的基础应用.

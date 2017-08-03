@@ -1,12 +1,10 @@
 package com.lambo.robot;
 
-import com.lambo.los.kits.io.IOKit;
 import com.lambo.robot.drivers.wakes.IWakeUp;
 import com.lambo.robot.drivers.wakes.impl.SnowBoyWakeUpImpl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 
 /**
  * 热歌.

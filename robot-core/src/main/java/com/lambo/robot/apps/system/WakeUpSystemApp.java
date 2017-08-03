@@ -42,10 +42,10 @@ public class WakeUpSystemApp extends BaseDriverApp {
     public boolean handle(RobotAppContext appContext, RobotMsg<?> robotMsg) throws Exception {
         if (MsgTypeEnum.waitWakeUp == robotMsg.getMsgType()) {
             if (!appContext.getSystemContext().isWaitWakeUp()) {
-                try{
+                try {
                     appContext.getSystemContext().getWaitWakeUpState().incrementAndGet();
                     appContext.addMsg(wakeUp.waitWakeUp());
-                }finally {
+                } finally {
                     appContext.getSystemContext().getWaitWakeUpState().decrementAndGet();
                 }
             }
