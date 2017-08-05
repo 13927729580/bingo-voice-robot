@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * 百度
  * Created by lambo on 2017/7/23.
  */
-public class BaiDuVoiceSpeakImpl extends PlaybackListener implements ISpeak {
+public class BaiDuVoiceSpeakImpl implements ISpeak {
     private final ConcurrentLinkedQueue<JavaLayerPlayer> players = new ConcurrentLinkedQueue<>();
     private final IVoiceApi voiceApi;
 
@@ -32,7 +32,6 @@ public class BaiDuVoiceSpeakImpl extends PlaybackListener implements ISpeak {
     public void say(SpeakMsg speakMsg) throws Exception {
         byte[] tts = voiceApi.tts(speakMsg.getUid(), speakMsg.getContent());
         JavaLayerPlayer player = new AudioPlayer().playMP3(tts);
-        player.setPlayBackListener(this);
         players.add(player);
         player.play();
         players.remove(player);

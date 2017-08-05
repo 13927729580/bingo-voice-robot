@@ -2,7 +2,7 @@ package com.lambo.robot.apis.music;
 
 import com.lambo.robot.apis.IMusicNetApi;
 import com.lambo.robot.kits.MusicAudioPlayer;
-import com.lambo.robot.model.ISong;
+import com.lambo.robot.model.Song;
 import org.junit.Test;
 
 import java.util.List;
@@ -16,10 +16,10 @@ public class Music163NetApiTest {
     @Test
     public void testSearch() throws Exception {
         IMusicNetApi musicNetApi = new Music163NetApi();
-        MusicAudioPlayer player = new MusicAudioPlayer(musicNetApi);
-        List<ISong> songs = player.search("李健", 10, 0);
+        MusicAudioPlayer player = new MusicAudioPlayer();
+        List<Song> songs = musicNetApi.search("李健", 10, 0);
         if (null != songs) {
-            for (ISong song : songs) {
+            for (Song song : songs) {
                 System.out.println(song.getArtists() + " == " + song.getTitle());
             }
         }

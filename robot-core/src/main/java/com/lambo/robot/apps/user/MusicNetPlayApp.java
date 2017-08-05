@@ -5,8 +5,8 @@ import com.lambo.robot.RobotSystemContext;
 import com.lambo.robot.apis.IMusicNetApi;
 import com.lambo.robot.apps.MsgTypeBaseApp;
 import com.lambo.robot.kits.MusicAudioPlayer;
-import com.lambo.robot.model.ISong;
 import com.lambo.robot.model.RobotMsg;
+import com.lambo.robot.model.Song;
 import com.lambo.robot.model.enums.MsgTypeEnum;
 import com.lambo.robot.model.enums.SystemMsgContentEnum;
 import com.lambo.robot.model.msgs.HearMsg;
@@ -26,10 +26,12 @@ import java.util.List;
 public class MusicNetPlayApp extends MsgTypeBaseApp {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final MusicAudioPlayer player;
+    private final IMusicNetApi musicNetApi;
 
     public MusicNetPlayApp(IMusicNetApi musicNetApi) {
         super(MsgTypeEnum.hear);
-        this.player = new MusicAudioPlayer(musicNetApi);
+        this.musicNetApi = musicNetApi;
+        this.player = new MusicAudioPlayer();
     }
 
     @Override
@@ -53,12 +55,45 @@ public class MusicNetPlayApp extends MsgTypeBaseApp {
     @Override
     public boolean handle(RobotAppContext appContext, RobotMsg<?> msg) throws Exception {
         String content = (String) msg.getContent();
+        if (content.contains("保存")) {
+            Song save = this.player.save();
+            if (null != save) {
+                appContext.say(new SpeakMsg("保存歌曲"+save.getArtists() + "的"+ save.getTitle()+ "成功"));
+                return true;
+            }
+            return false;
+        }
+        if (content.contains("删除")) {
+            Song song = this.player.delete();
+            if (null != song) {
+                appContext.say(new SpeakMsg("保存歌曲"+song.getArtists() + "的"+ song.getTitle()+ "成功"));
+                return true;
+            }
+            return false;
+        }
+
+        if (content.contains("播放本地")) {
+            this.player.load();
+            content = "播放音乐";
+        }
+
+        if (content.contains("什么歌")) {
+            Song song = this.player.getCurrSong();
+            if (null != song) {
+                appContext.say(new SpeakMsg("当前播放的歌曲是："+song.getArtists() + "的"+ song.getTitle()));
+                return true;
+            }
+            appContext.say(new SpeakMsg("当前没有歌曲在播放"));
+            return true;
+        }
+
         if (content.contains("播放音乐") || content.startsWith("音乐")) {
             if (!this.player.hasMusic()) {
                 appContext.addMsg(new SpeakMsg("播放器歌单暂时没有音乐"));
                 return true;
             }
-            appContext.say(new SpeakMsg("即将播放音乐：" + player.getPlayList().get(0).getArtists() + " 的 " + player.getPlayList().get(0).getTitle()));
+            Song next = player.getNextSong();
+            appContext.say(new SpeakMsg("即将播放音乐：" + next.getArtists() + " 的 " + next.getTitle()));
             this.player.play();
             return true;
         }
@@ -74,7 +109,8 @@ public class MusicNetPlayApp extends MsgTypeBaseApp {
                 appContext.say(new SpeakMsg("播放器歌单暂时没有音乐"));
                 return true;
             }
-            appContext.say(new SpeakMsg("即将播放音乐：" + player.getPlayList().get(0).getArtists() + " 的 " + player.getPlayList().get(0).getTitle()));
+            Song next = player.getNextSong();
+            appContext.say(new SpeakMsg("即将播放音乐：" + next.getArtists() + " 的 " + next.getTitle()));
             this.player.next();
             return true;
         }
@@ -90,7 +126,7 @@ public class MusicNetPlayApp extends MsgTypeBaseApp {
 
         if (content.contains("搜索") && (content.contains("音乐") || content.contains("歌曲"))) {
             appContext.say(new SpeakMsg("请在叮的一声后说出您的关键字."));
-            HearMsg hearEvent = null;
+            HearMsg hearEvent;
             try {
                 hearEvent = appContext.listening();
                 if (!hearEvent.isSuccess()) {
@@ -110,12 +146,12 @@ public class MusicNetPlayApp extends MsgTypeBaseApp {
 
     private boolean search(RobotAppContext appContext, String content) throws Exception {
         appContext.say(new SpeakMsg("正在为您搜索：" + content));
-        List<ISong> search = this.player.search(content, 50, 0);
+        List<Song> search = this.musicNetApi.search(content, 50, 0);
         if (null == search || search.isEmpty()) {
             appContext.say(new SpeakMsg("没有搜索结果，搜索失败！"));
             return true;
         }
-        for (ISong song : search) {
+        for (Song song : search) {
             logger.debug(song.getArtists() + " == " + song.getTitle());
         }
         appContext.say(new SpeakMsg("总共搜索到 " + search.size() + " 首歌曲。"));

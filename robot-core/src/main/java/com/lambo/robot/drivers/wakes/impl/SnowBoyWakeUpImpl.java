@@ -113,7 +113,6 @@ public class SnowBoyWakeUpImpl implements IWakeUp {
         interrupt = true;
     }
 
-
     //BIN_LIB为JAR包中存放DLL的路径
     //getResourceAsStream以JAR中根路径为开始点
     private synchronized static String copy2NativeDir(String filePath) {

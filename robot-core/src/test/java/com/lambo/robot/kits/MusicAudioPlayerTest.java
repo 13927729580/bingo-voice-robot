@@ -1,7 +1,7 @@
 package com.lambo.robot.kits;
 
 import com.lambo.robot.apis.music.Music163NetApi;
-import com.lambo.robot.model.ISong;
+import com.lambo.robot.model.Song;
 import javazoom.jl.decoder.JavaLayerException;
 
 import java.io.IOException;
@@ -15,11 +15,12 @@ import java.util.Scanner;
 public class MusicAudioPlayerTest {
 
     public static void main(String[] args) throws IOException, JavaLayerException {
-        MusicAudioPlayer audioPlayer = new MusicAudioPlayer(new Music163NetApi());
+        Music163NetApi music163NetApi = new Music163NetApi();
+        MusicAudioPlayer audioPlayer = new MusicAudioPlayer();
         Scanner scanner = new Scanner(System.in);
         System.out.println("please write command hear.");
-        List<ISong> search = audioPlayer.search("徐菲", 10, 0);
-        for (ISong song : search) {
+        List<Song> search = music163NetApi.search("徐菲", 10, 0);
+        for (Song song : search) {
             System.out.println("list = " + song.getArtists() + " == " + song.getTitle());
         }
         search.remove(0);

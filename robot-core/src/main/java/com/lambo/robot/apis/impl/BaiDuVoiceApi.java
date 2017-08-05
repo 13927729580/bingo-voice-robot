@@ -142,7 +142,7 @@ public class BaiDuVoiceApi implements IVoiceApi {
 
     private synchronized String getToken() {
         if (null == token || System.currentTimeMillis() > expiresIn) {
-            String fileName = ".baiDuYuYin.token";
+            String fileName = ".baiDuYuYin.token.cache";
             if (null == token) {
                 if (new File(fileName).exists()) {
                     InputStream inputStream = null;

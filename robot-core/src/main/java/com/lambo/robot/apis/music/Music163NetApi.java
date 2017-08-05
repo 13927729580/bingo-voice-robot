@@ -5,14 +5,14 @@ import com.lambo.los.http.client.HttpConnection;
 import com.lambo.los.kits.Strings;
 import com.lambo.los.kits.digest.DigestKit;
 import com.lambo.robot.apis.IMusicNetApi;
-import com.lambo.robot.model.ISong;
+import com.lambo.robot.model.Song;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 网易音乐api.
@@ -31,7 +31,7 @@ public class Music163NetApi implements IMusicNetApi {
     }
 
     @Override
-    public List<ISong> search(String text, int limit, int offset) throws IOException {
+    public List<Song> search(String text, int limit, int offset) throws IOException {
         HttpConnection conn = HttpConnection.connect("http://music.163.com/api/search/pc");
         conn.data("s", text);
         conn.data("limit", limit + "");
@@ -44,30 +44,21 @@ public class Music163NetApi implements IMusicNetApi {
         }
         SearchResult searchResult = gson.fromJson(response.body(), SearchResult.class);
         if (searchResult.result.songCount > 0) {
-            List<ISong> result = new ArrayList<>();
-            for (SearchResult song : searchResult.result.songs) {
-                result.add(new ISong() {
-                    public String getSongId() {
-                        return song.id;
-                    }
-
-                    public String getTitle() {
-                        return song.name;
-                    }
-
-                    public String getArtists() {
-                        return null != song.artists && !song.artists.isEmpty() ? song.artists.get(0).name : null;
-                    }
-
-                    public InputStream getInputStream() throws IOException {
-                        String url = getPlayUrl(getSongId(), "320000");
-                        return new BufferedInputStream(new URL(url).openStream());
-                    }
-                });
-            }
-            return result;
+            return searchResult.result.songs.stream().map(song -> new Song(song.id,
+                    song.name,
+                    null != song.artists && !song.artists.isEmpty() ? song.artists.get(0).name : null,
+                    "163")).collect(Collectors.toList());
         }
         return null;
+    }
+
+    @Override
+    public InputStream getInputStream(Song song) throws IOException {
+        String url = getPlayUrl(song.getSongId(), "320000");
+        if ("null".equals(url)) {
+            return null;
+        }
+        return new BufferedInputStream(new URL(url).openStream());
     }
 
     public String getPlayUrl(String songId, String br) throws IOException {

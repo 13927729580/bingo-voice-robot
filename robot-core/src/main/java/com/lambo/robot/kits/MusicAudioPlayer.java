@@ -2,12 +2,14 @@ package com.lambo.robot.kits;
 
 import com.lambo.los.kits.io.IOKit;
 import com.lambo.robot.apis.IMusicNetApi;
-import com.lambo.robot.model.ISong;
+import com.lambo.robot.apis.music.BaiDuTingApi;
+import com.lambo.robot.apis.music.Music163NetApi;
+import com.lambo.robot.model.MusicPlayList;
+import com.lambo.robot.model.Song;
 import javazoom.jl.decoder.JavaLayerException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -16,49 +18,54 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by lambo on 2017/7/24.
  */
 public class MusicAudioPlayer {
-    private final IMusicNetApi musicNetApi;
-    private List<ISong> playList = new LinkedList<>();
     private AudioPlayer audioPlayer = new AudioPlayer();
     private JavaLayerPlayer advancedPlayer = null;
-    private ISong currSong;
     private int lastPosition = 0;
+    private final MusicPlayList musicPlayList = new MusicPlayList();
 
     /**
      * 状态.0.初始。1.正在播放。2.暂停 3.停止.
      */
     private AtomicInteger state = new AtomicInteger(0);
+    private final IMusicNetApi music163 = new Music163NetApi();
+    private final IMusicNetApi ting = new BaiDuTingApi();
 
-    public MusicAudioPlayer(IMusicNetApi musicNetApi) {
-        this.musicNetApi = musicNetApi;
-    }
 
     public boolean hasMusic() {
-        return null != playList && !playList.isEmpty();
+        if (musicPlayList.getPlayList().isEmpty()){
+            musicPlayList.setPlayList(musicPlayList.getLocalPlayList());
+        }
+        return !musicPlayList.getPlayList().isEmpty() || !musicPlayList.getLocalPlayList().isEmpty();
     }
 
     public int getState() {
         return state.get();
     }
 
-    public List<ISong> getPlayList() {
-        return playList;
-    }
-
     public void play() throws IOException, JavaLayerException {
         if (state.get() == 1) {
             return;
         }
-        if (!hasMusic() && null == currSong) {
+        if (!hasMusic()) {
             return;
         }
-        if (null == currSong) {
+        Song currSong = musicPlayList.curr();
+        if (state.get() == 3) {
             lastPosition = 0;
-            currSong = playList.remove(0);
         }
         if (null != advancedPlayer) {
             advancedPlayer.close();
         }
-        final InputStream inputStream = currSong.getInputStream();
+        final InputStream inputStream;
+        if ("ting".equals(currSong.getType())) {
+            inputStream = ting.getInputStream(getCurrSong());
+        }else {
+            inputStream = music163.getInputStream(getCurrSong());
+        }
+        if (null == inputStream){
+            next();
+            return;
+        }
         advancedPlayer = audioPlayer.playMP3(inputStream);
         state.set(1);
         new Thread() {
@@ -90,6 +97,7 @@ public class MusicAudioPlayer {
     public void next() throws IOException, JavaLayerException {
         this.stop();
         if (hasMusic()) {
+            musicPlayList.incrementAndGet();//执行下一页.
             this.play();
         }
     }
@@ -101,17 +109,29 @@ public class MusicAudioPlayer {
             advancedPlayer.close();
         }
         this.advancedPlayer = null;
-        this.currSong = null;
     }
 
-    public List<ISong> search(String content, int limit, int offset) throws IOException {
-        return musicNetApi.search(content, limit, offset);
+    public void setPlayList(List<Song> playList) {
+        this.musicPlayList.setPlayList(playList);
     }
 
-    public void setPlayList(List<ISong> playList) {
-        this.playList.clear();
-        if (null != playList && !playList.isEmpty()) {
-            this.playList.addAll(playList);
-        }
+    public Song save() {
+        return musicPlayList.save();
+    }
+
+    public Song getCurrSong() {
+        return musicPlayList.curr();
+    }
+
+    public Song getNextSong() {
+        return musicPlayList.getNextSong();
+    }
+
+    public void load() {
+        musicPlayList.setPlayList(musicPlayList.getLocalPlayList());
+    }
+
+    public Song delete() {
+        return musicPlayList.delete();
     }
 }
