@@ -1,7 +1,7 @@
 package com.lambo.robot.drivers.hears.impl;
 
 import com.lambo.los.kits.Strings;
-import com.lambo.robot.apis.BaiDuVoiceApi;
+import com.lambo.robot.apis.impl.BaiDuVoiceApi;
 import com.lambo.robot.drivers.hears.IHear;
 import com.lambo.robot.drivers.records.IRecord;
 import com.lambo.robot.model.VoiceData;

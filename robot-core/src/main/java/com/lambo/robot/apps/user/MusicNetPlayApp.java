@@ -2,7 +2,7 @@ package com.lambo.robot.apps.user;
 
 import com.lambo.robot.RobotAppContext;
 import com.lambo.robot.RobotSystemContext;
-import com.lambo.robot.apis.music.IMusicNetApi;
+import com.lambo.robot.apis.IMusicNetApi;
 import com.lambo.robot.apps.MsgTypeBaseApp;
 import com.lambo.robot.kits.MusicAudioPlayer;
 import com.lambo.robot.model.ISong;

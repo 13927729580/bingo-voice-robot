@@ -1,7 +1,8 @@
-package com.lambo.robot.apis;
+package com.lambo.robot.apis.impl;
 
 import com.lambo.los.http.client.HttpConnection;
 import com.lambo.los.kits.Strings;
+import com.lambo.robot.apis.IRobotApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +12,7 @@ import java.io.IOException;
  * 图灵机器人.
  * Created by Administrator on 2017/7/20.
  */
-public class TuLingRobotApi {
+public class TuLingRobotApi implements IRobotApi{
     private Logger logger = LoggerFactory.getLogger(getClass());
     private static final String URL_TU_LING_API = "http://www.tuling123.com/openapi/api";
     private final String appKey;

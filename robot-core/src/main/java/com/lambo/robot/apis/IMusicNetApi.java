@@ -1,4 +1,4 @@
-package com.lambo.robot.apis.music;
+package com.lambo.robot.apis;
 
 import com.lambo.robot.model.ISong;
 

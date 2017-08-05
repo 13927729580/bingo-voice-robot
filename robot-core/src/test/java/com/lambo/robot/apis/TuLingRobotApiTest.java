@@ -1,5 +1,6 @@
 package com.lambo.robot.apis;
 
+import com.lambo.robot.apis.impl.TuLingRobotApi;
 import org.junit.Test;
 
 /**

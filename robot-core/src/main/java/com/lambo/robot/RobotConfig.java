@@ -1,10 +1,10 @@
 package com.lambo.robot;
 
 import com.lambo.los.kits.io.IOKit;
-import com.lambo.robot.apis.BaiDuVoiceApi;
+import com.lambo.robot.apis.impl.BaiDuVoiceApi;
 import com.lambo.robot.apis.IVoiceApi;
-import com.lambo.robot.apis.TuLingRobotApi;
-import com.lambo.robot.apis.music.IMusicNetApi;
+import com.lambo.robot.apis.impl.TuLingRobotApi;
+import com.lambo.robot.apis.IMusicNetApi;
 import com.lambo.robot.apis.music.Music163NetApi;
 import com.lambo.robot.kits.BeepPlayer;
 import org.ho.yaml.Yaml;

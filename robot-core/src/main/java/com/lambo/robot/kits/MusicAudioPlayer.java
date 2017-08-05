@@ -1,7 +1,7 @@
 package com.lambo.robot.kits;
 
 import com.lambo.los.kits.io.IOKit;
-import com.lambo.robot.apis.music.IMusicNetApi;
+import com.lambo.robot.apis.IMusicNetApi;
 import com.lambo.robot.model.ISong;
 import javazoom.jl.decoder.JavaLayerException;
 

@@ -2,6 +2,7 @@ package com.lambo.robot.apis;
 
 import com.lambo.los.kits.Strings;
 import com.lambo.los.kits.io.IOKit;
+import com.lambo.robot.apis.impl.BaiDuVoiceApi;
 import javazoom.jl.decoder.JavaLayerException;
 import javazoom.jl.player.advanced.AdvancedPlayer;
 import org.junit.Assert;

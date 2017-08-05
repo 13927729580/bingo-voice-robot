@@ -3,6 +3,7 @@ package com.lambo.robot.apis.music;
 import com.google.gson.Gson;
 import com.lambo.los.http.client.HttpConnection;
 import com.lambo.los.kits.io.IOKit;
+import com.lambo.robot.apis.IMusicNetApi;
 import com.lambo.robot.kits.AudioPlayer;
 import com.lambo.robot.model.ISong;
 import javazoom.jl.decoder.JavaLayerException;

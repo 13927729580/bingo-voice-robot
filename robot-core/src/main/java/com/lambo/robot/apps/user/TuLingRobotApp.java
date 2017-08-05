@@ -1,7 +1,7 @@
 package com.lambo.robot.apps.user;
 
 import com.lambo.robot.RobotAppContext;
-import com.lambo.robot.apis.TuLingRobotApi;
+import com.lambo.robot.apis.impl.TuLingRobotApi;
 import com.lambo.robot.apps.MsgTypeBaseApp;
 import com.lambo.robot.model.RobotMsg;
 import com.lambo.robot.model.enums.MsgTypeEnum;

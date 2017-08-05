@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.lambo.los.http.client.HttpConnection;
 import com.lambo.los.kits.Strings;
 import com.lambo.los.kits.digest.DigestKit;
+import com.lambo.robot.apis.IMusicNetApi;
 import com.lambo.robot.model.ISong;
 
 import java.io.BufferedInputStream;
