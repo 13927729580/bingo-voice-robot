@@ -49,7 +49,7 @@ public class MusicAudioPlayer {
         if (!hasMusic()) {
             return;
         }
-        Song currSong = musicPlayList.curr();
+        Song currSong = musicPlayList.curr(0);
         if (state.get() == 3) {
             lastPosition = 0;
         }
@@ -120,11 +120,11 @@ public class MusicAudioPlayer {
     }
 
     public Song getCurrSong() {
-        return musicPlayList.curr();
+        return musicPlayList.curr(0);
     }
 
     public Song getNextSong() {
-        return musicPlayList.getNextSong();
+        return musicPlayList.curr(1);
     }
 
     public void load() {
@@ -133,5 +133,15 @@ public class MusicAudioPlayer {
 
     public Song delete() {
         return musicPlayList.delete();
+    }
+
+    public Song getPrevSong() {
+        return musicPlayList.curr(-1);
+    }
+
+    public void prev() throws IOException, JavaLayerException {
+        musicPlayList.decrementAndGet();
+        musicPlayList.decrementAndGet();
+        next();
     }
 }

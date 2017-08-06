@@ -56,7 +56,7 @@ public class MusicPlayList {
     }
 
     public Song save() {
-        Song song = curr();
+        Song song = curr(0);
         if (null != song && !localPlayList.contains(song)) {
             localPlayList.add(song);
             if (!localCacheName.exists()){
@@ -77,13 +77,17 @@ public class MusicPlayList {
     public int incrementAndGet() {
         return index.incrementAndGet();
     }
-
-    public Song getNextSong() {
-        return !playList.isEmpty() ? playList.get((index.get() + 1)% playList.size()) : null;
+    public int decrementAndGet() {
+        int i = index.decrementAndGet();
+        if (i < 0){
+            i = 0;
+            index.set(i);
+        }
+        return i;
     }
 
-    public Song curr() {
-        return !playList.isEmpty() ? playList.get(index.get()% playList.size()) : null;
+    public Song curr(int step) {
+        return !playList.isEmpty() ? playList.get((index.get() + step)% playList.size()) : null;
     }
 
     public List<Song> getLocalPlayList() {
@@ -95,7 +99,7 @@ public class MusicPlayList {
     }
 
     public Song delete() {
-        Song song = curr();
+        Song song = curr(0);
         if (null != song && localPlayList.contains(song)) {
             localPlayList.remove(song);
             if (!localCacheName.exists()){

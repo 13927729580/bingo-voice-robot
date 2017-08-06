@@ -66,15 +66,10 @@ public class MusicNetPlayApp extends MsgTypeBaseApp {
         if (content.contains("删除")) {
             Song song = this.player.delete();
             if (null != song) {
-                appContext.say(new SpeakMsg("保存歌曲"+song.getArtists() + "的"+ song.getTitle()+ "成功"));
+                appContext.say(new SpeakMsg("删除歌曲"+song.getArtists() + "的"+ song.getTitle()+ "成功"));
                 return true;
             }
             return false;
-        }
-
-        if (content.contains("播放本地")) {
-            this.player.load();
-            content = "播放音乐";
         }
 
         if (content.contains("什么歌")) {
@@ -85,6 +80,12 @@ public class MusicNetPlayApp extends MsgTypeBaseApp {
             }
             appContext.say(new SpeakMsg("当前没有歌曲在播放"));
             return true;
+        }
+
+        if (content.contains("播放本地")) {
+            this.player.stop();
+            this.player.load();
+            content = "播放音乐";
         }
 
         if (content.contains("播放音乐") || content.startsWith("音乐")) {
@@ -101,6 +102,16 @@ public class MusicNetPlayApp extends MsgTypeBaseApp {
         if (content.contains("停止播放")) {
             this.player.stop();
             appContext.say(new SpeakMsg("停止音乐成功"));
+            return true;
+        }
+        if (content.contains("上一首歌") || content.contains("上首歌")) {
+            if (!this.player.hasMusic()) {
+                appContext.say(new SpeakMsg("播放器歌单暂时没有音乐"));
+                return true;
+            }
+            Song song = player.getPrevSong();
+            appContext.say(new SpeakMsg("即将播放音乐：" + song.getArtists() + " 的 " + song.getTitle()));
+            this.player.prev();
             return true;
         }
 
