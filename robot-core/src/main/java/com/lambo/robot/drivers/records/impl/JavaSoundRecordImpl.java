@@ -55,7 +55,7 @@ public class JavaSoundRecordImpl implements IRecord {
         try {
             this.interrupt = false;
             beepPlayer.beepHi();
-            ThreadKit.sleep(500);
+            ThreadKit.sleep(200);
             targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
             AudioFormat recordAudioFormat = robotConfig.getRecordAudioFormat();
             targetDataLine.open(recordAudioFormat);
@@ -104,8 +104,7 @@ public class JavaSoundRecordImpl implements IRecord {
                             }
                         }
                         rmsVoiceEnvNoiseDouble = sum / noise.length;
-                        voiceNoiseFloat = max - rmsVoiceEnvNoiseDouble + voiceNoiseFloat;
-                        logger.info("set rmsVoiceEnvNoiseDouble = {}", rmsVoiceEnvNoiseDouble);
+                        logger.info("set rmsVoiceEnvNoiseDouble = {}, max = {}", rmsVoiceEnvNoiseDouble, max - rmsVoiceEnvNoiseDouble);
                         continue;
                     }
 

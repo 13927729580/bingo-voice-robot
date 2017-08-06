@@ -6,7 +6,7 @@ robot:
     robot: tuling
     sampleRate: 16000
     voiceStopTime: 800
-    voiceNoiseFloat: 1.2
+    voiceNoiseFloat: 2.2
 
 
 snowBoyUsers:
