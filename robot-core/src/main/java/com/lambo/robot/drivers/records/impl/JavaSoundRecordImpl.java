@@ -55,7 +55,7 @@ public class JavaSoundRecordImpl implements IRecord {
         try {
             this.interrupt = false;
             beepPlayer.beepHi();
-            ThreadKit.sleep(200);
+            ThreadKit.sleep(500);
             targetDataLine = (TargetDataLine) AudioSystem.getLine(info);
             AudioFormat recordAudioFormat = robotConfig.getRecordAudioFormat();
             targetDataLine.open(recordAudioFormat);
