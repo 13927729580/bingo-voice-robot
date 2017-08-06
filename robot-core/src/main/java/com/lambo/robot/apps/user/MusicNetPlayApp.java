@@ -93,8 +93,8 @@ public class MusicNetPlayApp extends MsgTypeBaseApp {
                 appContext.addMsg(new SpeakMsg("播放器歌单暂时没有音乐"));
                 return true;
             }
-            Song next = player.getNextSong();
-            appContext.say(new SpeakMsg("即将播放音乐：" + next.getArtists() + " 的 " + next.getTitle()));
+            Song song = player.getCurrSong();
+            appContext.say(new SpeakMsg("即将播放音乐：" + song.getArtists() + " 的 " + song.getTitle()));
             this.player.play();
             return true;
         }
