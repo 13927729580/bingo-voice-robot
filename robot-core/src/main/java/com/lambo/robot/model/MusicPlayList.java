@@ -2,12 +2,12 @@ package com.lambo.robot.model;
 
 import com.lambo.los.kits.io.IOKit;
 import org.ho.yaml.Yaml;
-import org.ho.yaml.YamlStream;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -115,5 +115,20 @@ public class MusicPlayList {
             }
         }
         return song;
+    }
+    final Random random = new Random();
+    public void random() {
+        if (!playList.isEmpty()) {
+            int len = playList.size();
+            Song[] songs = playList.toArray(new Song[len]);
+            Song tmp;
+            for (int i = 0; i < len; i++) {//进行自动排序.
+                int idx = random.nextInt(len);
+                tmp = songs[i];
+                songs[i] = songs[idx];
+                songs[idx] = tmp;
+            }
+            setPlayList(Arrays.asList(songs));
+        }
     }
 }

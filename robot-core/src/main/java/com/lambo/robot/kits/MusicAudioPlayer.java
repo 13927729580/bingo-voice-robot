@@ -144,4 +144,8 @@ public class MusicAudioPlayer {
         musicPlayList.decrementAndGet();
         next();
     }
+
+    public void random() {
+        musicPlayList.random();
+    }
 }

@@ -72,7 +72,7 @@ public class JavaSoundRecordImpl implements IRecord {
             double rmsVoiceEnvNoiseDouble = 0;
             double voiceNoiseFloat = robotConfig.getVoiceNoiseFloat();
             byte[][] cache = new byte[(int) (recordAudioFormat.getSampleRate() % buf.length * 0.8)][];
-            int maxNoContentTimes = 5;
+            int maxNoContentTimes = 8;
             while (true) {
                 int i = 0;
                 outputFile.reset();
@@ -104,6 +104,9 @@ public class JavaSoundRecordImpl implements IRecord {
                             }
                         }
                         rmsVoiceEnvNoiseDouble = sum / noise.length;
+                        if ((max - rmsVoiceEnvNoiseDouble) > 1.2) {
+                            voiceNoiseFloat += (max - rmsVoiceEnvNoiseDouble - 1.2);
+                        }
                         logger.info("set rmsVoiceEnvNoiseDouble = {}, max = {}", rmsVoiceEnvNoiseDouble, max - rmsVoiceEnvNoiseDouble);
                         continue;
                     }

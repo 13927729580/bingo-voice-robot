@@ -88,6 +88,12 @@ public class MusicNetPlayApp extends MsgTypeBaseApp {
             content = "播放音乐";
         }
 
+        if (content.contains("随机播放") || content.contains("打乱歌单")) {
+            this.player.stop();
+            this.player.random();
+            content = "播放音乐";
+        }
+
         if (content.contains("播放音乐") || content.startsWith("音乐")) {
             if (!this.player.hasMusic()) {
                 appContext.addMsg(new SpeakMsg("播放器歌单暂时没有音乐"));
