@@ -31,6 +31,9 @@ public class RobotRunnable implements Runnable {
     @RunnableMainRunner.Value
     private String test;
 
+    @RunnableMainRunner.Value
+    private String useRecord;
+
     @Override
     public void run() {
         try {
@@ -57,7 +60,9 @@ public class RobotRunnable implements Runnable {
 //            system.install(new SpeakSystemOutApp());
             system.install(new VoiceDataBaiDuSystemApp(robotConfig.getVoiceApi()));
             system.install(new WebServerApp(robotConfig.webPort));
-            system.install(new RecordSystemApp(new JavaSoundRecordImpl(robotConfig)));
+            if (!"false".equals(useRecord)) {
+                system.install(new RecordSystemApp(new JavaSoundRecordImpl(robotConfig)));
+            }
             system.install(new MusicNetPlayApp(robotConfig.getMusicNetApi()));
             system.install(new TuLingRobotApp());
 

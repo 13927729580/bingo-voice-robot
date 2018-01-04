@@ -63,6 +63,7 @@ public class MusicAudioPlayer {
             inputStream = music163.getInputStream(getCurrSong());
         }
         if (null == inputStream){
+            delete();
             next();
             return;
         }
