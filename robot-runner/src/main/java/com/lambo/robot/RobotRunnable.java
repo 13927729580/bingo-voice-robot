@@ -32,7 +32,10 @@ public class RobotRunnable implements Runnable {
     private String test;
 
     @RunnableMainRunner.Value
-    private String useRecord;
+    private String noRecord;
+
+    @RunnableMainRunner.Value
+    private String noWakeUp;
 
     @Override
     public void run() {
@@ -54,21 +57,20 @@ public class RobotRunnable implements Runnable {
 
             IRobotOperatingSystem system = new RobotOperatingSystem(robotConfig);
             //使用系统输入作为唤醒的应用.
-            system.install(new WakeUpSystemApp(wakeUp));
+
+            system.install(new WakeUpSystemApp(wakeUp, "true".equals(noWakeUp)));
             system.install(new SpeakSystemApp(speak));
             system.install(new VolumeApp());
 //            system.install(new SpeakSystemOutApp());
             system.install(new VoiceDataBaiDuSystemApp(robotConfig.getVoiceApi()));
             system.install(new WebServerApp(robotConfig.webPort));
-            if (!"false".equals(useRecord)) {
+            if (!"true".equals(noRecord)) {
                 system.install(new RecordSystemApp(new JavaSoundRecordImpl(robotConfig)));
             }
             system.install(new MusicNetPlayApp(robotConfig.getMusicNetApi()));
             system.install(new TuLingRobotApp());
 
-            if (!"true".equalsIgnoreCase(test)) {
-                speak.say(new SpeakMsg(robotConfig.getWelcomeMsg()));
-            }
+            speak.say(new SpeakMsg(robotConfig.getWelcomeMsg()));
             system.run();
         } catch (Exception e) {
             logger.error("robot start failed", e);
