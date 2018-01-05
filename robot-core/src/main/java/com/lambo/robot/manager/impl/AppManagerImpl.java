@@ -42,6 +42,11 @@ public class AppManagerImpl implements IAppManager {
     private final AtomicInteger pidIndex = new AtomicInteger(100);
 
     @Override
+    public List<IApp> getAppListByMsgTypeEnum(MsgTypeEnum msgTypeEnum) {
+        return msgListenerRegMap.get(msgTypeEnum);
+    }
+
+    @Override
     public void install(RobotSystemContext systemContext, IApp app) {
         installAppList.add(app);
         RobotAppContext appContext = new RobotAppContext(systemContext, app, pidIndex.incrementAndGet());

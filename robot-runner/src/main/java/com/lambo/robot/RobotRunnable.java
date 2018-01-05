@@ -46,11 +46,13 @@ public class RobotRunnable implements Runnable {
             }
             RobotConfig robotConfig = RobotConfig.getRobotConfig(configPath);
 
-            IWakeUp wakeUp;
-            if ("true".equalsIgnoreCase(test)) {
-                wakeUp = new SystemReadWakeUpImpl();
-            } else {
-                wakeUp = new SnowBoyWakeUpImpl(robotConfig);
+            IWakeUp wakeUp = null;
+            if(!"true".equals(noWakeUp)) {
+                if ("true".equalsIgnoreCase(test)) {
+                    wakeUp = new SystemReadWakeUpImpl();
+                } else {
+                    wakeUp = new SnowBoyWakeUpImpl(robotConfig);
+                }
             }
 
             ISpeak speak = new BaiDuVoiceSpeakImpl(robotConfig.getVoiceApi());
@@ -58,7 +60,9 @@ public class RobotRunnable implements Runnable {
             IRobotOperatingSystem system = new RobotOperatingSystem(robotConfig);
             //使用系统输入作为唤醒的应用.
 
-            system.install(new WakeUpSystemApp(wakeUp, "true".equals(noWakeUp)));
+            if(!"true".equals(noWakeUp)) {
+                system.install(new WakeUpSystemApp(wakeUp));
+            }
             system.install(new SpeakSystemApp(speak));
             system.install(new VolumeApp());
 //            system.install(new SpeakSystemOutApp());

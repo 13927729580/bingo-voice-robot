@@ -5,11 +5,20 @@ import com.lambo.robot.RobotSystemContext;
 import com.lambo.robot.model.RobotMsg;
 import com.lambo.robot.model.enums.MsgTypeEnum;
 
+import java.util.List;
+
 /**
  * 应用管理器.
  * Created by lambo on 2017/7/25.
  */
 public interface IAppManager {
+
+    /**
+     * 获取应用列表。
+     * @param msgTypeEnum
+     * @return
+     */
+    List<IApp> getAppListByMsgTypeEnum(MsgTypeEnum msgTypeEnum);
 
     /**
      * 安装应用.

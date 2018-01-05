@@ -17,11 +17,9 @@ import com.lambo.robot.model.msgs.WakeUpMsg;
  */
 public class WakeUpSystemApp extends BaseDriverApp {
     private final IWakeUp wakeUp;
-    private final boolean noWakeUp;
 
-    public WakeUpSystemApp(IWakeUp wakeUp, boolean noWakeUp) {
+    public WakeUpSystemApp(IWakeUp wakeUp) {
         super(MsgTypeEnum.waitWakeUp, MsgTypeEnum.wakeUp);
-        this.noWakeUp = noWakeUp;
         this.wakeUp = wakeUp;
     }
 
@@ -43,13 +41,6 @@ public class WakeUpSystemApp extends BaseDriverApp {
     @Override
     public boolean handle(RobotAppContext appContext, RobotMsg<?> robotMsg) throws Exception {
         if (MsgTypeEnum.waitWakeUp == robotMsg.getMsgType()) {
-            if (noWakeUp){
-                appContext.getSystemContext().getWaitWakeUpState().incrementAndGet();
-               synchronized (wakeUp){
-                   wakeUp.wait();
-               }
-                return true;
-            }
             if (!appContext.getSystemContext().isWaitWakeUp()) {
                 try {
                     appContext.getSystemContext().getWaitWakeUpState().incrementAndGet();

@@ -62,11 +62,14 @@ public class RobotOperatingSystem implements IRobotOperatingSystem, Runnable {
                 e.printStackTrace();
             }
             if (interrupt.get() && runNum.get() == 1 && systemContext.isWaitWakeUp()) {
+                logger.debug("add SystemMsg - interruptReset");
                 systemContext.addMsg(null, new SystemMsg(SystemMsgContentEnum.interruptReset));
                 interrupt.set(false);
             }
             //当前没有可用的任务.并且没有可用的唤醒.
-            if (runNum.get() <= 0 && !systemContext.isWaitWakeUp()) {
+            if (runNum.get() <= 0 && !systemContext.isWaitWakeUp() &&
+                    null != systemContext.getAppManager().getAppListByMsgTypeEnum(MsgTypeEnum.waitWakeUp)) {
+                logger.debug("add WaitWakeUpMsg, no run");
                 systemContext.addMsg(null, new WaitWakeUpMsg());
             }
         }
