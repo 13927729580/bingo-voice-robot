@@ -88,7 +88,7 @@ public class JavaSoundRecordImpl implements IRecord {
                     if (maxNoContentTimes < 0 || System.currentTimeMillis() > maxEndTime) { //超时不再录音监听.
                         throw new TimeoutException("record time out");
                     }
-                    double rms = Math.abs(RMSUtil.getRMS(buf)) / 3;
+                    double rms = RMSUtil.calculateVolume(buf, recordAudioFormat.getSampleSizeInBits());
                     if (index < noise.length) { //初始化杂音记录.
                         noise[index] = rms;
                         continue;
@@ -111,7 +111,7 @@ public class JavaSoundRecordImpl implements IRecord {
                         continue;
                     }
 
-                    hasVoice = (rmsVoiceEnvNoiseDouble - rms) > voiceNoiseFloat;
+                    hasVoice = (rms - rmsVoiceEnvNoiseDouble) > voiceNoiseFloat;
                     if (hasVoice) {
                         logger.info("has voice rmsVoiceEnvNoiseDouble = {}, curr = {}", rmsVoiceEnvNoiseDouble, rms);
                     }
