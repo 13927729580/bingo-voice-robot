@@ -63,10 +63,7 @@ public class JavaSoundRecordImpl implements IRecord {
             final AtomicBoolean run = new AtomicBoolean(true);
             ByteArrayOutputStream outputFile = new ByteArrayOutputStream();
             byte[] buf = new byte[1024];
-            boolean hasVoice;
-            boolean hasContent;
             AtomicInteger hasVoiceTimes = new AtomicInteger(0);
-            double[] noise = new double[10];
             int maxTimes = robotConfig.getUnSpeakTimes(recordAudioFormat.getSampleRate(), buf.length);
             int index = -1;
             double rmsVoiceEnvNoiseDouble = 0;
@@ -77,7 +74,7 @@ public class JavaSoundRecordImpl implements IRecord {
                 int i = 0;
                 outputFile.reset();
                 hasVoiceTimes.set(0);
-                hasContent = false;
+                boolean hasContent = false;
                 maxNoContentTimes--;
                 while (run.get() && (targetDataLine.read(buf, 0, buf.length)) == buf.length) {
                     index++;
@@ -89,29 +86,7 @@ public class JavaSoundRecordImpl implements IRecord {
                         throw new TimeoutException("record time out");
                     }
                     double rms = RMSUtil.calculateVolume(buf, recordAudioFormat.getSampleSizeInBits());
-                    if (index < noise.length) { //初始化杂音记录.
-                        noise[index] = rms;
-                        continue;
-                    }
-
-                    if (rmsVoiceEnvNoiseDouble == 0.00) {//如果环境杂音未收集，则进行一次收集.
-                        double sum = 0;
-                        double max = 0;
-                        for (double v : noise) {
-                            sum += v;
-                            if (max < v) {
-                                max = v;
-                            }
-                        }
-                        rmsVoiceEnvNoiseDouble = sum / noise.length;
-                        if ((max - rmsVoiceEnvNoiseDouble) > 1.2) {
-                            voiceNoiseFloat += (max - rmsVoiceEnvNoiseDouble - 1.2);
-                        }
-                        logger.info("set rmsVoiceEnvNoiseDouble = {}, max = {}", rmsVoiceEnvNoiseDouble, max - rmsVoiceEnvNoiseDouble);
-                        continue;
-                    }
-
-                    hasVoice = (rms - rmsVoiceEnvNoiseDouble) > voiceNoiseFloat;
+                    boolean hasVoice = (rms - rmsVoiceEnvNoiseDouble) > voiceNoiseFloat;
                     if (hasVoice) {
                         logger.info("has voice rmsVoiceEnvNoiseDouble = {}, curr = {}", rmsVoiceEnvNoiseDouble, rms);
                     }
